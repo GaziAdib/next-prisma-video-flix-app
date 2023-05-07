@@ -1,5 +1,5 @@
-import useCurrentUser from '@/hooks/useCurrentUser';
-import { getSession, signOut } from 'next-auth/react';
+import Navbar from '@/components/Navbar';
+import { getSession } from 'next-auth/react';
 
 export async function getServerSideProps(context) {
 
@@ -22,16 +22,12 @@ export async function getServerSideProps(context) {
 
 export default function Home() {
 
-  const { data: user } = useCurrentUser();
-
   return (
 
     <>
-      <h1 className="text-4xl text-green-500">Netflix Clone</h1>
 
-      <p className='text-white'>Logged In as : {user?.name}</p>
+      <Navbar />
 
-      <button className='h-10 w-full bg-white' onClick={() => signOut()}>Logout</button>
     </>
 
   )
