@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
     try {
 
-        await serverAuth(req);
+        await serverAuth(req, res);
 
         const movieCount = await prismadb.movie.count();
 
