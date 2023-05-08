@@ -1,6 +1,7 @@
 import Billboard from '@/components/Billboard';
 import MovieList from '@/components/MovieList';
 import Navbar from '@/components/Navbar';
+import useFavorites from '@/hooks/useFavorites';
 import useMovieList from '@/hooks/useMovieList';
 import { getSession } from 'next-auth/react';
 
@@ -26,6 +27,7 @@ export async function getServerSideProps(context) {
 export default function Home() {
 
   const { data: movies, isLoading, error } = useMovieList();
+  const { data: favorites = [] } = useFavorites();
 
   return (
 
@@ -37,6 +39,7 @@ export default function Home() {
 
       <div className='pb-40'>
         <MovieList title='Trending Now' data={movies} />
+        <MovieList title='My List' data={favorites} />
       </div>
 
 
