@@ -19,21 +19,20 @@ const FavoriteButton = ({ movieId }) => {
         let response;
 
         if (isFavorite) {
-            response = await axios.delete('/api/favorite', { data: { movieId } })
+            response = await axios.delete(`/api/favorite?movieId=${movieId}`)
         } else {
-            response = await axios.post('/api/favorite', { movieId })
+            response = await axios.post('/api/favorite', { movieId });
         }
 
         const updatedFavoriteIds = response?.data?.favoriteIds;
 
+
         mutate({
             ...currentUser,
             favoriteIds: updatedFavoriteIds,
-        })
-
-        mutateFavorites()
-    }, [movieId, isFavorite, currentUser, mutate, mutateFavorites])
-
+        });
+        mutateFavorites();
+    }, [movieId, isFavorite, currentUser, mutate, mutateFavorites]);
     const Icon = isFavorite ? AiOutlineCheck : AiOutlinePlus
 
     return (

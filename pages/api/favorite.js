@@ -6,22 +6,23 @@ export default async function handler(req, res) {
 
     try {
         if (req.method === 'POST') {
-            const currentUser = await serverAuth(req, res);
-            const { movieId } = req.body;
+            const { currentUser } = await serverAuth(req, res);
+            const { movieId } = req?.body;
+
 
             const existingMovie = await prismadb.movie.findUnique({
                 where: {
-                    id: movieId
+                    id: movieId,
                 }
             });
 
             if (!existingMovie) {
-                throw new Error('Invalid Id');
+                throw new Error('Invalid ID');
             }
 
             const user = await prismadb.user.update({
                 where: {
-                    email: currentUser?.email
+                    email: currentUser.email || '',
                 },
                 data: {
                     favoriteIds: {
@@ -30,18 +31,20 @@ export default async function handler(req, res) {
                 }
             });
 
+
+
             return res.status(200).json(user);
 
         }
 
         if (req.method === 'DELETE') {
-            const currentUser = await serverAuth(req, res);
+            const { currentUser } = await serverAuth(req, res);
 
-            const { movieId } = req.body;
+            const movieId = req.query?.movieId;
 
             const existingMovie = await prismadb.movie.findUnique({
                 where: {
-                    id: movieId
+                    id: movieId,
                 }
             });
 
@@ -49,16 +52,16 @@ export default async function handler(req, res) {
                 throw new Error('Invalid Id');
             }
 
-            const updatedFavoriteIds = without(currentUser.favoriteIds, movieId)
+            const updatedFavoriteIds = without(currentUser.favoriteIds, movieId);
 
             const updatedUser = await prismadb.user.update({
                 where: {
-                    email: currentUser?.email
+                    email: currentUser.email || '',
                 },
                 data: {
-                    favoriteIds: updatedFavoriteIds
+                    favoriteIds: updatedFavoriteIds,
                 }
-            })
+            });
 
             return res.status(200).json(updatedUser);
 
@@ -68,7 +71,7 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(400).end();
+        return res.status(500).end();
     }
 
 
