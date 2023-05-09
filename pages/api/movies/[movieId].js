@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     }
     try {
         await serverAuth(req, res);
+
         const { movieId } = req.query;
 
         if (typeof movieId !== 'string') {
